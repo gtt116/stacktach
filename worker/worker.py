@@ -21,7 +21,7 @@ import json
 import kombu
 import kombu.connection
 import kombu.entity
-import kombu.mixins
+from kombu import Consumer
 import logging
 import time
 
@@ -38,7 +38,7 @@ handler = logging.handlers.TimedRotatingFileHandler('worker.log',
 LOG.addHandler(handler)
 
 
-class NovaConsumer(kombu.mixins.ConsumerMixin):
+class NovaConsumer():
     def __init__(self, name, connection, deployment, durable):
         self.connection = connection
         self.deployment = deployment
@@ -48,22 +48,30 @@ class NovaConsumer(kombu.mixins.ConsumerMixin):
         self.pmi = None
         self.processed = 0
         self.total_processed = 0
+        self.channel = connection.channel()
 
-    def get_consumers(self, Consumer, channel):
-        nova_exchange = kombu.entity.Exchange("nova", type="topic",
-                        exclusive=False, durable=self.durable,
-                        auto_delete=False)
+        self.nova_exchange = kombu.entity.Exchange("nova", type="topic",
+                                    exclusive=False, durable=self.durable,
+                                    auto_delete=False)
 
-        nova_queues = [
-            kombu.Queue("monitor.info", nova_exchange, durable=self.durable,
-                        auto_delete=False,
-                        exclusive=False, routing_key='monitor.info'),
-            kombu.Queue("monitor.error", nova_exchange, durable=self.durable,
-                        auto_delete=False,
-                        exclusive=False, routing_key='monitor.error'),
+        self.nova_queues = [
+            kombu.Queue("notifications.info", self.nova_exchange,
+                        durable=self.durable, auto_delete=False,
+                        exclusive=False, routing_key='notifications.info'),
+            kombu.Queue("notifications.error", self.nova_exchange,
+                        durable=self.durable, auto_delete=False,
+                        exclusive=False, routing_key='notifications.error'),
         ]
 
-        return [Consumer(queues=nova_queues, callbacks=[self.on_nova])]
+        self.consumer = Consumer(channel=self.channel,
+                            queues=self.nova_queues, callbacks=[self.on_nova])
+
+    def run(self):
+        while True:
+            self.consumer.consume()
+            self.connection.drain_events()
+            time.sleep(1)
+
 
     def _process(self, body, message):
         routing_key = message.delivery_info['routing_key']
@@ -113,7 +121,8 @@ class NovaConsumer(kombu.mixins.ConsumerMixin):
             self._process(body, message)
         except Exception, e:
             LOG.exception("Problem %s" % e)
-        message.ack()
+        finally:
+            message.ack()
 
 
 def run(deployment_config):
@@ -132,10 +141,12 @@ def run(deployment_config):
 
     params = dict(hostname=host,
                   port=port,
-                  userid=user_id,
-                  password=password,
-                  transport="librabbitmq",
                   virtual_host=virtual_host)
+
+    if user_id:
+        params.update('userid', user_id)
+    if password:
+        params.update('password', password)
 
     while True:
         LOG.debug("Processing on '%s'" % name)

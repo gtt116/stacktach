@@ -15,9 +15,9 @@ import pprint
 
 def _extract_states(payload):
     return {
-        'state' : payload.get('state', ""),
-        'old_state' : payload.get('old_state', ""),
-        'old_task' : payload.get('old_task_state', "")
+        'state': payload.get('state', ""),
+        'old_state': payload.get('old_state', ""),
+        'old_task': payload.get('old_task_state', "")
     }
 
 
@@ -69,9 +69,9 @@ def _compute_update_message(routing_key, body):
 
 
 # routing_key : handler
-HANDLERS = {'monitor.info':_monitor_message,
-            'monitor.error':_monitor_message,
-            '':_compute_update_message}
+HANDLERS = {'notifications.info': _monitor_message,
+            'notifications.error': _monitor_message,
+            '': _compute_update_message}
 
 
 def start_kpi_tracking(lifecycle, raw):
@@ -199,6 +199,7 @@ def aggregate(raw):
             update_kpi(lifecycle, timing, raw)
     timing.save()
 
+
 def process_raw_data(deployment, args, json_args):
     """This is called directly by the worker to add the event to the db."""
     db.reset_queries()
@@ -278,13 +279,13 @@ def home(request, deployment_id):
 def details(request, deployment_id, column, row_id):
     deployment_id = int(deployment_id)
     c = _default_context(request, deployment_id)
+    rows = models.RawData.objects.select_related()
     row = models.RawData.objects.get(pk=row_id)
     value = getattr(row, column)
-    rows = models.RawData.objects.select_related()
     if deployment_id:
         rows = rows.filter(deployment=deployment_id)
     if column != 'when':
-        rows = rows.filter(**{column:value})
+        rows = rows.filter(**{column: value})
     else:
         when = dt.dt_from_decimal(value)
         from_time = when - datetime.timedelta(minutes=1)
@@ -314,12 +315,13 @@ def latest_raw(request, deployment_id):
     """This is the 2sec ticker that updates the Recent Activity box."""
     deployment_id = int(deployment_id)
     c = _default_context(request, deployment_id)
-    then = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
-    thend = dt.dt_to_decimal(then)
-    query = models.RawData.objects.select_related().filter(when__gt=thend)
-    if deployment_id > 0:
-        query = query.filter(deployment=deployment_id)
-    rows = query.order_by('-when')[:20]
+#    then = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+#    thend = dt.dt_to_decimal(then)
+#    query = models.RawData.objects.select_related().filter(when__gt=thend)
+#    if deployment_id > 0:
+#        query = query.filter(deployment=deployment_id)
+#    rows = query.order_by('-when')[:20]
+    rows = models.RawData.objects.all().order_by('-when')[:20]
     _post_process_raw_data(rows)
     c['rows'] = rows
     return render_to_response('host_status.html', c)
@@ -334,7 +336,7 @@ def search(request, deployment_id):
         rows = models.RawData.objects.select_related()
         if deployment_id:
             row = rows.filter(deployment=deployment_id)
-        rows = rows.filter(**{column:value}). \
+        rows = rows.filter(**{column: value}). \
                order_by('-when')[:22]
         _post_process_raw_data(rows)
     c['rows'] = rows

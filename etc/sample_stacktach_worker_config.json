@@ -1,20 +1,12 @@
 {"deployments": [
     {   
-        "name": "east_coast.prod.global",
+        "name": "114-113-199-11",
         "durable_queue": false,
-        "rabbit_host": "10.0.0.1",
+        "rabbit_host": "114.113.199.11",
         "rabbit_port": 5672,
-        "rabbit_userid": "rabbit",
-        "rabbit_password": "rabbit",
+        "rabbit_userid": "",
+        "rabbit_password": "",
         "rabbit_virtual_host": "/"
-    },
-    {
-        "name": "east_coast.prod.cell1",
-        "durable_queue": false,
-        "rabbit_host": "10.0.1.1",
-        "rabbit_port": 5672,
-        "rabbit_userid": "rabbit",
-        "rabbit_password": "rabbit",
-        "rabbit_virtual_host": "/"
-    }]
+    }
+    ]
 }
