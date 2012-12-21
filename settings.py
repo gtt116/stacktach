@@ -1,20 +1,21 @@
 # Django settings for StackTach project.
 import os
 
-try:
-    from local_settings import *
+os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
 
-    db_name = STACKTACH_DB_NAME
-    db_host = STACKTACH_DB_HOST
-    db_username = STACKTACH_DB_USERNAME
-    db_password = STACKTACH_DB_PASSWORD
-    install_dir = STACKTACH_INSTALL_DIR
-except ImportError:
+try:
     db_name = os.environ['STACKTACH_DB_NAME']
     db_host = os.environ.get('STACKTACH_DB_HOST', "")
     db_username = os.environ['STACKTACH_DB_USERNAME']
     db_password = os.environ['STACKTACH_DB_PASSWORD']
     install_dir = os.environ['STACKTACH_INSTALL_DIR']
+except KeyError:
+    db_name = 'stacktach'
+    db_host = ""
+    db_username = "root"
+    db_password = ''
+    install_dir = "/home/hzgaott/openstack/stacktach/"
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
