@@ -72,6 +72,9 @@ class Lifecycle(models.Model):
                              blank=True, db_index=True)
     last_raw = models.ForeignKey(RawData, null=True)
 
+    def __repr__(self):
+        return self.instance
+
 
 class Timing(models.Model):
     """Each Timing record corresponds to a .start/.end event pair
@@ -88,6 +91,9 @@ class Timing(models.Model):
 
     diff = models.DecimalField(null=True, max_digits=20, decimal_places=6,
                                db_index=True)
+
+    def __repr__(self):
+        return self.name
 
 
 class RequestTracker(models.Model):

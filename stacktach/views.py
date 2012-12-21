@@ -343,3 +343,20 @@ def search(request, deployment_id):
     c['allow_expansion'] = True
     c['show_absolute_time'] = True
     return render_to_response('rows.html', c)
+
+
+def _pretty_times(times):
+    for time in times:
+        time.fstart_when = dt.dt_from_decimal(time.start_when)
+        time.fend_when = dt.dt_from_decimal(time.end_when)
+    return times
+
+
+def lifecycle(request, deployment_id, instance_id):
+    c = _default_context(request, deployment_id)
+    lifecycle = models.Lifecycle.objects.get(instance=instance_id)
+    times = models.Timing.objects.all().\
+                    filter(lifecycle=lifecycle)
+    c['lifecycle'] = lifecycle
+    c['times'] = _pretty_times(times)
+    return render_to_response('lifecycle.html', c)
