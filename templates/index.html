@@ -13,6 +13,11 @@ function expand(deployment_id, row_id)
                                        row_id);
 };
 
+function shrink(deployment_id, row_id)
+{
+    $("#row_expansion_" + row_id).empty();
+};
+
 function search_form(deployment_id)
 {
     var field = $("#field").val();
