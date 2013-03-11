@@ -337,7 +337,7 @@ def search(request, deployment_id):
         if deployment_id:
             row = rows.filter(deployment=deployment_id)
         rows = rows.filter(**{column: value}). \
-               order_by('-when')[:22]
+               order_by('-when')[:100]
         _post_process_raw_data(rows)
     c['rows'] = rows
     c['allow_expansion'] = True
