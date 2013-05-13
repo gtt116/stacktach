@@ -28,7 +28,6 @@ import time
 from pympler.process import ProcessMemoryInfo
 
 from stacktach import models, views
-from stacktach import datetime_to_decimal as dt
 
 
 LOG = logging.getLogger(__name__)
@@ -55,10 +54,10 @@ class NovaConsumer():
                                     auto_delete=False)
 
         self.nova_queues = [
-            kombu.Queue("notifications.info", self.nova_exchange,
+            kombu.Queue("stacktash.notifications.info", self.nova_exchange,
                         durable=self.durable, auto_delete=False,
                         exclusive=False, routing_key='notifications.info'),
-            kombu.Queue("notifications.error", self.nova_exchange,
+            kombu.Queue("stacktash.notifications.error", self.nova_exchange,
                         durable=self.durable, auto_delete=False,
                         exclusive=False, routing_key='notifications.error'),
         ]
@@ -72,11 +71,11 @@ class NovaConsumer():
             self.connection.drain_events()
             time.sleep(1)
 
-
     def _process(self, body, message):
         routing_key = message.delivery_info['routing_key']
         payload = (routing_key, body)
-        jvalues = json.dumps(payload)
+        # make sure jsonable body.
+        json.dumps(payload)
 
         body = str(message.body)
         args = (routing_key, json.loads(body))
