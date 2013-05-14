@@ -1,2 +1,4 @@
 .ropeproject/
 *.pyc
+stacktach/db.sqlite
+worker.log*
