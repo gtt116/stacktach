@@ -1,9 +1,7 @@
 # Copyright 2012 - Dark Secret Software Inc.
 
 from django import db
-from django import http
 from django.shortcuts import render_to_response
-from django import template
 
 from stacktach import models
 from stacktach import datetime_to_decimal as dt
@@ -32,7 +30,6 @@ def _monitor_message(routing_key, body):
     else:
         host = None
     payload = body['payload']
-    request_spec = payload.get('request_spec', None)
 
     # instance UUID's seem to hide in a lot of odd places.
     instance = payload.get('instance_id', None)
@@ -223,7 +220,7 @@ def process_raw_data(deployment, args, json_args):
             except ValueError:
                 # Old way of doing it
                 when = datetime.datetime.strptime(when, "%Y-%m-%dT%H:%M:%S.%f")
-        except Exception, e:
+        except Exception:
             pass
         values['when'] = dt.dt_to_decimal(when)
         values['routing_key'] = routing_key

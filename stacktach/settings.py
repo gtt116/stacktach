@@ -1,21 +1,7 @@
 # Django settings for StackTach project.
 import os
 
-os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
-
-try:
-    db_name = os.environ['STACKTACH_DB_NAME']
-    db_host = os.environ.get('STACKTACH_DB_HOST', "")
-    db_username = os.environ['STACKTACH_DB_USERNAME']
-    db_password = os.environ['STACKTACH_DB_PASSWORD']
-    install_dir = os.environ['STACKTACH_INSTALL_DIR']
-except KeyError:
-    db_name = 'stacktach'
-    db_host = ""
-    db_username = "root"
-    db_password = ''
-    install_dir = "/home/hzgaott/openstack/stacktach/"
-
+PWD = os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -28,11 +14,11 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': db_name,
-        'USER': db_username,
-        'PASSWORD': db_password,
-        'HOST': db_host,    # Set to empty string for localhost.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '%s/db.sqlite' % PWD,
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',    # Set to empty string for localhost.
         'PORT': '',    # Set to empty string for default.
     }
 }
@@ -89,7 +75,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    [install_dir + "static",]
 )
 
 # List of finder classes that know how to find static files in
@@ -124,7 +109,6 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    install_dir + "templates"
 )
 
 INSTALLED_APPS = (
