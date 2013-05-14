@@ -1,8 +1,8 @@
 {"deployments": [
     {   
-        "name": "114-113-199-11",
+        "name": "cloud.netease.com",
         "durable_queue": false,
-        "rabbit_host": "114.113.199.11",
+        "rabbit_host": "localhost",
         "rabbit_port": 5672,
         "rabbit_userid": "",
         "rabbit_password": "",

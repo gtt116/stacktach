@@ -1,5 +1,6 @@
 import json
 import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'stacktach.settings'
 import signal
 import sys
 
@@ -12,8 +13,8 @@ if os.path.exists(os.path.join(POSSIBLE_TOPDIR, 'stacktach')):
 
 import worker
 
-config_filename = os.environ.get('STACKTACH_DEPLOYMENTS_FILE',
-                                 'stacktach_worker_config.json')
+config_filename = os.path.join(os.path.dirname(__file__),
+                               'stacktach_worker_config.json')
 try:
     from local_settings import *
     config_filename = STACKTACH_DEPLOYMENTS_FILE
