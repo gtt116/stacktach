@@ -69,7 +69,6 @@ class NovaConsumer():
         while True:
             self.consumer.consume()
             self.connection.drain_events()
-            time.sleep(1)
 
     def _process(self, body, message):
         routing_key = message.delivery_info['routing_key']
