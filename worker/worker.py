@@ -1,6 +1,5 @@
 # Copyright 2012 - Dark Secret Software Inc.
 # All Rights Reserved.
-#
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
@@ -16,20 +15,24 @@
 # This is the worker you run in your OpenStack environment. You need
 # to set TENANT_ID and URL to point to your StackTach web server.
 
+import httplib
 import datetime
 import json
+import logging
+import time
+
+import iso8601
 import kombu
 import kombu.connection
 import kombu.entity
 from kombu import Consumer
-import logging
-import time
 
 from pympler.process import ProcessMemoryInfo
 
 from stacktach import models, views
 
 
+logging.basicConfig(format='[%(asctime)s] ' + logging.BASIC_FORMAT)
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
 handler = logging.handlers.TimedRotatingFileHandler('worker.log',
@@ -37,7 +40,7 @@ handler = logging.handlers.TimedRotatingFileHandler('worker.log',
 LOG.addHandler(handler)
 
 
-class NovaConsumer():
+class NovaConsumer(object):
     def __init__(self, name, connection, deployment, durable):
         self.connection = connection
         self.deployment = deployment
@@ -62,10 +65,10 @@ class NovaConsumer():
                         exclusive=False, routing_key='notifications.error'),
         ]
 
-        self.consumer = Consumer(channel=self.channel,
-                            queues=self.nova_queues, callbacks=[self.on_nova])
-
     def run(self):
+        self.consumer = Consumer(channel=self.channel,
+                                 queues=self.nova_queues,
+                                 callbacks=[self.on_nova])
         while True:
             self.consumer.consume()
             self.connection.drain_events()
@@ -123,6 +126,47 @@ class NovaConsumer():
             message.ack()
 
 
+class ElasticSearchFeeder(NovaConsumer):
+    def __init__(self, name, connection, deployment, durable):
+        super(ElasticSearchFeeder, self).__init__(name, connection,
+                                                  deployment, durable)
+        self.es_url = 'localhost:9200'
+
+    @staticmethod
+    def _canonic_datetime(datetime_str):
+        PERFECT_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
+        timestamp = iso8601.parse_date(datetime_str).\
+                strftime(PERFECT_TIME_FORMAT)
+        return timestamp
+
+    @staticmethod
+    def _tiny_payload(payload):
+        if 'args' in payload:
+            del payload['args']
+        if 'metadata' in payload:
+            del payload['metadata']
+        if 'request_spec' in payload:
+            del payload['request_spec']
+
+    def _process(self, body, message):
+        LOG.debug('Receive message: %s' % message)
+        url = message.delivery_info['routing_key'].replace('.', '/')
+
+        body['timestamp'] = self._canonic_datetime(body['timestamp'])
+
+        self._tiny_payload(body['payload'])
+
+        body_json = json.dumps(body)
+        conn = httplib.HTTPConnection(self.es_url)
+        conn.request("POST",
+                     url=url,
+                     body=body_json)
+        res = conn.getresponse()
+
+        if str(res.status) != '201':
+            raise Exception('%s: %s' % (res.status, res.read()))
+
+
 def run(deployment_config):
     name = deployment_config['name']
     host = deployment_config.get('rabbit_host', 'localhost')
@@ -151,6 +195,7 @@ def run(deployment_config):
         with kombu.connection.BrokerConnection(**params) as conn:
             try:
                 consumer = NovaConsumer(name, conn, deployment, durable)
+                # consumer = ElasticSearchFeeder(name, conn, deployment, durable)
                 consumer.run()
             except Exception as e:
                 LOG.exception("name=%s, exception=%s. Reconnecting in 5s" %
