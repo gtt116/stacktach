@@ -53,7 +53,7 @@ function search_form(deployment_id)
 <div class='status'>
     <div class='status-inner' style='padding-bottom:0em; margin-bottom:0em; margin-top:1em'>
         <div>
-        <form action="">
+        <form class="form-inline" action="">
         <select id='field'>
            <option>deployment</option>
            <option value='routing_key'>source</option>
@@ -64,7 +64,7 @@ function search_form(deployment_id)
            <option value='request_id'>request</option>
            <option selected='true'>instance
         </select>
-        <input type='text' id='query' size='60' value=''/>
+        <input type='text' id='query' style="width:400px; height:30px;" value=''/>
         Include Updates: <input type='checkbox' id="updates" checked />
         <select id='count'>
             <option selected='true'>25</option>
@@ -72,7 +72,7 @@ function search_form(deployment_id)
             <option>250</option>
             <option>All</option>
         </select>
-        <input type='submit' value='Search' onclick='return search_form({{deployment_id}});'/>
+        <input class="btn btn-primary"type='submit' value='Search' onclick='return search_form({{deployment_id}});'/>
         </form>
         </div>
     </div>

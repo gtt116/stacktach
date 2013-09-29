@@ -16,23 +16,19 @@ $(function() {
 {% endblock %}
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div id="eyebrow" class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="#">gtt116</a>
+            <a class="brand" href="/">NVS-stacktach</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="#">{% block subtitle %}{% endblock %}</a></li>
+                  <li class=""><a href="{% url home deployment_id %}">debug</a></li>
+                  <li class="active"><a href="{% url summary deployment_id %}">statistic</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
     </div>
-</div>
+</div><!--navbar-->
 
 <div id="content" class="container" >
     {% block subcontent %}

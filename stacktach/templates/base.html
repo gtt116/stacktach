@@ -27,6 +27,8 @@ under the License.
 
 <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=PT+Sans&subset=latin' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/static/css/bootstrap.css" />
+<link rel="stylesheet" href="/static/css/style.css" />
 
 <style type="text/css">
     .fancy {
@@ -107,12 +109,24 @@ under the License.
 </script>
 </head>
 <body>
-    <div class='fancy'><a href='/'>StackTach</a>
-        <span style='font-size: small'>v2</span>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="/">NVS-stacktach</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="active"><a href="{% url home deployment_id %}">debug</a></li>
+          <li class=""><a href="{% url summary deployment_id %}">statistic</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
     </div>
+  </div>
+</div><!--navbar-->
 
-{% block body %}
-{% endblock %}
+<div id="content">
+  {% block body %}
+  {% endblock %}
+</div>
 
-    </body>
+</body>
 </html>
