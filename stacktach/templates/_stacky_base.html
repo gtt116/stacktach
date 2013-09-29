@@ -1,77 +1,89 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>{% block title %}{% endblock %} - gtt116</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.css" />
-    <link rel="stylesheet" href="/static/css/style.css" />
-    {% block head %}
-    {% endblock %}
-  </head>
-  <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
+<head>
+<title>{% block title %}{% endblock %} - gtt116</title>
+<link rel="stylesheet" href="/static/css/bootstrap.css" />
+<link rel="stylesheet" href="/static/css/style.css" />
+<script language="javascript" type="text/javascript" src="/static/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/static/js/jquery.stupidtable.js"></script>
+
+<script>
+$(function() {
+    $("#stacky_table").stupidtable();
+});
+</script>
+{% block head %}
+{% endblock %}
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">gtt116</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-                <li class="active"><a href="#">{% block subtitle %}{% endblock %}</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">gtt116</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">{% block subtitle %}{% endblock %}</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
         </div>
-      </div>
     </div>
+</div>
 
-    <div id="content" class="container" >
-      {% block subcontent %}
-      {% endblock %}
-      {% block content %}
-      <h3>{{subtitle}}</h3>
-      <table class="table table-scriped table-hover">
-        <tr>
-          <th>ID</th>
-          {% for head in header %}
-          <th>{{head}}</th>
-          {% endfor %}
-        </tr>
+<div id="content" class="container" >
+    {% block subcontent %}
+    {% endblock %}
+    {% block content %}
+    <h3>{{subtitle}}</h3>
+    <table id="stacky_table" class="table table-scriped table-hover">
+        <thead>
+            <tr>
+                <th data-sort="int">ID</th>
+                {% for head in header %}
+                <th data-sort="string">{{head}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
 
+        <tbody>
         {% for line in data %}
         <tr>
-          <td>{{forloop.counter}}</td>
-          {% for col in line %}
+            <td>{{forloop.counter}}</td>
+            {% for col in line %}
             {% if forloop.first %}
             <td>
-              {% if url_prefix %}
-              <a href="{{url_prefix}}{{col}}">
+                {% if url_prefix %}
+                <a href="{{url_prefix}}{{col}}">
+                    {{col}}
+                </a>
+                {% else %}
                 {{col}}
-              </a>
-              {% else %}
-                {{col}}
-              {% endif %}
+                {% endif %}
             </td>
             {% else %}
             <td>
-              {{col}}
+                {{col}}
             </td>
             {% endif %}
-          {% endfor %}
+            {% endfor %}
         </tr>
         {% endfor %}
-      </table>
-      {% endblock %}
-    </div>
+        </tbody>
+    </table>
+    {% endblock %}
+</div>
 
-    <hr/>
-    <div id="footer" class="container">
-      {% block footer %}
-      <div class="center">
+<hr/>
+<div id="footer" class="container">
+    {% block footer %}
+    <div class="center">
         &copy; Copyright 2013 by <a href="http://github.com/gtt116/">gtt116</a>.
-      </div>
-      {% endblock %}
     </div>
-  </body>
+    {% endblock %}
+</div>
+</body>
 </html>

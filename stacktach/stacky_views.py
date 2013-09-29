@@ -33,7 +33,7 @@ def summary(request, deployment_id):
     resp = stacky_server.do_summary(request)
     resp['url_prefix'] = reverse('timings', args=[deployment_id]) + '?name='
     resp['subtitle'] = 'Summary'
-    return render_to_response('stacky_summary.html', resp)
+    return render_to_response('stacky.html', resp)
 
 
 @monkey_patch_stacky

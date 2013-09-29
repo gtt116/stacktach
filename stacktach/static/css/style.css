@@ -5,3 +5,7 @@
 #footer {
   text-align: center;
 }
+
+th[data-sort]{
+  cursor:pointer;
+}
