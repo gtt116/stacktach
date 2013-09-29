@@ -35,3 +35,13 @@ urlpatterns = patterns(
     url(r'^(?P<deployment_id>\d+)/latest_raw/$',
         'stacktach.views.latest_raw', name='latest_raw'),
 )
+
+urlpatterns += patterns(
+    'stacktach.stackyviews',
+    url(r'^(?P<deployment_id>\d+)/summary/$',
+            'summary'),
+    url(r'^(?P<deployment_id>\d+)/timings/$',
+            'timings', name='timings'),
+    url(r'^(?P<deployment_id>\d+)/timings/uuid$',
+            'timings_uuid', name='timings_uuid'),
+)
