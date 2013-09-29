@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -7,6 +7,7 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns(
     '',
     url(r'^$', 'stacktach.views.welcome', name='welcome'),
+
     url(r'stacky/deployments/$', 'stacktach.stacky_server.do_deployments'),
     url(r'stacky/events/$', 'stacktach.stacky_server.do_events'),
     url(r'stacky/hosts/$', 'stacktach.stacky_server.do_hosts'),
@@ -21,6 +22,7 @@ urlpatterns = patterns(
         'stacktach.stacky_server.do_watch'),
     url(r'stacky/kpi/$', 'stacktach.stacky_server.do_kpi'),
     url(r'stacky/kpi/(?P<tenant_id>\d+)/$', 'stacktach.stacky_server.do_kpi'),
+
     url(r'^(?P<deployment_id>\d+)/$', 'stacktach.views.home', name='home'),
     url(r'^(?P<deployment_id>\d+)/details/(?P<column>\w+)/(?P<row_id>\d+)/$',
         'stacktach.views.details', name='details'),
