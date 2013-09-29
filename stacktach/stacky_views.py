@@ -1,3 +1,7 @@
+"""
+Stacky views proxy all request into stacky_server and render
+response into html.
+"""
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 
