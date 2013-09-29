@@ -34,6 +34,4 @@ urlpatterns = patterns(
         'stacktach.views.lifecycle', name='lifecycle'),
     url(r'^(?P<deployment_id>\d+)/latest_raw/$',
         'stacktach.views.latest_raw', name='latest_raw'),
-    url(r'^(?P<deployment_id>\d+)/instance_status/$',
-        'stacktach.views.instance_status', name='instance_status'),
 )
