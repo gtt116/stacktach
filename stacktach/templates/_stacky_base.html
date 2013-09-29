@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    {% block head %}
     <title>{% block title %}{% endblock %} - gtt116</title>
     <link rel="stylesheet" href="/static/css/bootstrap.css" />
     <link rel="stylesheet" href="/static/css/style.css" />
+    {% block head %}
     {% endblock %}
   </head>
   <body>
@@ -27,6 +27,8 @@
     </div>
 
     <div id="content" class="container" >
+      {% block subcontent %}
+      {% endblock %}
       {% block content %}
       <h3>{{subtitle}}</h3>
       <table class="table table-scriped table-hover">
