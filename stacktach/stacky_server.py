@@ -7,7 +7,6 @@ from django.http import HttpResponse
 
 import datetime_to_decimal as dt
 import models
-import views
 
 SECS_PER_HOUR = 60 * 60
 SECS_PER_DAY = SECS_PER_HOUR * 24
@@ -128,8 +127,8 @@ def do_timings(request):
     results = []
     results.append([name, "Time"])
     timings = models.Timing.objects.select_related().filter(name=name) \
-                                 .exclude(Q(start_raw=None) | Q(end_raw=None)) \
-                                 .order_by('diff')
+                            .exclude(Q(start_raw=None) | Q(end_raw=None)) \
+                            .order_by('-diff')
 
     for t in timings:
         results.append([t.lifecycle.instance, sec_to_time(t.diff)])
@@ -167,7 +166,7 @@ def do_summary(request):
             _max = max(_max, seconds)
 
         results.append([name, int(num), sec_to_time(_min),
-                   sec_to_time(_max), sec_to_time(int(total/num)) ])
+                   sec_to_time(_max), sec_to_time(int(total / num))])
     return rsp(results)
 
 
