@@ -37,7 +37,7 @@ urlpatterns = patterns(
 )
 
 urlpatterns += patterns(
-    'stacktach.stackyviews',
+    'stacktach.stacky_views',
     url(r'^(?P<deployment_id>\d+)/summary/$',
             'summary'),
     url(r'^(?P<deployment_id>\d+)/timings/$',
