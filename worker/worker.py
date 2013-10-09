@@ -186,9 +186,9 @@ def run(deployment_config):
                   virtual_host=virtual_host)
 
     if user_id:
-        params.update('userid', user_id)
+        params['userid'] = user_id
     if password:
-        params.update('password', password)
+        params['password'] = password
 
     while True:
         LOG.debug("Processing on '%s'" % name)
