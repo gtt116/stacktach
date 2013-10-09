@@ -18,9 +18,8 @@ StackTach has three primary components:
 
 ### The "Hurry Up" Install Guide
 1. Create a database for StackTach to use. By default, StackTach assumes MySql, but you can modify the settings.py file to others.
-1. Install django and the other required libraries listed in `./etc/pip-requires.txt` (I hope I got 'em all)
 1. Clone this repo
-1. Copy and configure the config files in `./etc` (see below for details)
+1. Configure config files `worker/stacktach_worker_config.json` to match your environment. (see below for details)
 1. Create the necessary database tables (python manage.py syncdb) You don't need an administrator account since there are no user profiles used.
 1. Configure OpenStack to publish Notifications back into RabbitMQ (see below)
 1. Restart the OpenStack services.
