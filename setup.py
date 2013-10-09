@@ -4,7 +4,7 @@ import setuptools
 requires = [
     'eventlet>=0.9.17',
     'kombu==1.0.4',
-    'django',
+    'django==1.4.5',
     'pympler',
 ]
 
