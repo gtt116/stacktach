@@ -3,6 +3,11 @@ import os
 
 PWD = os.path.dirname(__file__)
 
+EMAIL_HOST = ""
+EMAIL_USER = ""
+EMAIL_PASSWORD = ""
+EMAIL_RECEIVERS = ['']
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

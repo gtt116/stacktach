@@ -5,3 +5,4 @@ worker.log*
 .venv
 *.egg-info/
 etc/deployments.yaml
+stacktach/settings.py

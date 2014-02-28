@@ -4,6 +4,7 @@ import yaml
 from django import db
 from django.shortcuts import render_to_response
 
+from stacktach import mailer
 from stacktach import models
 from stacktach import datetime_to_decimal as dt
 
@@ -17,6 +18,14 @@ def _extract_states(payload):
         'old_state': payload.get('old_state', ""),
         'old_task': payload.get('old_task_state', "")
     }
+
+
+def mail_and_save(routing_key, body):
+    obj = _monitor_message(routing_key, body)
+    subject = 'Get %(event)s from %(host)s' % obj
+    payload = yaml.safe_dump(body)
+    mailer.send(subject, payload)
+    return obj
 
 
 def _monitor_message(routing_key, body):
@@ -67,7 +76,7 @@ def _compute_update_message(routing_key, body):
 
 # routing_key : handler
 HANDLERS = {'notifications.info': _monitor_message,
-            'notifications.error': _monitor_message,
+            'notifications.error': mail_and_save,
             '': _compute_update_message}
 
 
