@@ -1,4 +1,5 @@
 # Copyright 2012 - Dark Secret Software Inc.
+import yaml
 
 from django import db
 from django.shortcuts import render_to_response
@@ -8,7 +9,6 @@ from stacktach import datetime_to_decimal as dt
 
 import datetime
 import json
-import pprint
 
 
 def _extract_states(payload):
@@ -303,8 +303,8 @@ def expand(request, deployment_id, row_id):
     c = _default_context(request, deployment_id)
     row = models.RawData.objects.get(pk=row_id)
     payload = json.loads(row.json)
-    pp = pprint.PrettyPrinter()
-    c['payload'] = pp.pformat(payload)
+    payload = yaml.safe_dump(payload)
+    c["payload"] = payload
     return render_to_response('expand.html', c)
 
 
