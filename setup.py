@@ -8,6 +8,7 @@ requires = [
     'pympler',
     'iso8601',
     'pyyaml',
+    'south',
 ]
 
 
