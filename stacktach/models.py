@@ -29,6 +29,8 @@ class RawData(models.Model):
     deployment = models.ForeignKey(Deployment)
     tenant = models.CharField(max_length=50, null=True, blank=True,
                               db_index=True)
+    tenant_name = models.CharField(max_length=50, null=True, blank=True,
+                              db_index=True)
     json = models.TextField()
     routing_key = models.CharField(max_length=50, null=True,
                                    blank=True, db_index=True)

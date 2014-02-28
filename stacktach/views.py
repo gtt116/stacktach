@@ -51,9 +51,11 @@ def _monitor_message(routing_key, body):
 
     tenant = body.get('_context_project_id', None)
     tenant = payload.get('tenant_id', tenant)
+
+    tenant_name = body.get('_context_project_name', None)
     resp = dict(host=host, instance=instance, publisher=publisher,
                 service=service, event=event, tenant=tenant,
-                request_id=request_id)
+                request_id=request_id, tenant_name=tenant_name)
     resp.update(_extract_states(payload))
     return resp
 
