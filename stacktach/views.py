@@ -312,13 +312,10 @@ def latest_raw(request, deployment_id):
     """This is the 2sec ticker that updates the Recent Activity box."""
     deployment_id = int(deployment_id)
     c = _default_context(request, deployment_id)
-#    then = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
-#    thend = dt.dt_to_decimal(then)
-#    query = models.RawData.objects.select_related().filter(when__gt=thend)
-#    if deployment_id > 0:
-#        query = query.filter(deployment=deployment_id)
-#    rows = query.order_by('-when')[:20]
-    rows = models.RawData.objects.all().order_by('-when')[:20]
+    query = models.RawData.objects.select_related()
+    if deployment_id > 0:
+        query = query.filter(deployment=deployment_id)
+    rows = query.order_by('-when')[:20]
     _post_process_raw_data(rows)
     c['rows'] = rows
     return render_to_response('host_status.html', c)
