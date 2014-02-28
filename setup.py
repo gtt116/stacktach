@@ -6,6 +6,8 @@ requires = [
     'kombu==1.0.4',
     'django==1.4.5',
     'pympler',
+    'iso8601',
+    'pyyaml',
 ]
 
 
