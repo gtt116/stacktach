@@ -2,3 +2,4 @@
 *.pyc
 stacktach/db.sqlite
 worker.log*
+.venv
