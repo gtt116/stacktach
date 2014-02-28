@@ -1,3 +1,15 @@
+# Notification settings
+
+## nova
+
+ * exchange: nova
+ * routing: notifications.error, notifications.info
+
+## glance
+  
+ * exchange: glance
+ * routing: notifications.error, notifications.info, notifications.warn
+
 # StackTach
 
 StackTach is a debugging / monitoring utility for OpenStack ([Open]StackTach[ometer]). StackTach can work with multiple datacenters including multi-cell deployments.
