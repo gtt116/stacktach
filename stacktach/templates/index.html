@@ -41,7 +41,7 @@ function search_form(deployment_id)
 
 {% block body %}
 <div class='status-title'>Recent Activity
-{% if deployment %}- {{deployment.name}}{%else%}- ALL{%endif%}
+  {% if deployment %}- {{deployment.name}}: processed: {{deployment_processed}}{%else%}- ALL{%endif%}
 </div>
 <div id='host-box' class='status std-height'>
     <div id='host_activity' class='status-inner'>

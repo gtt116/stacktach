@@ -8,7 +8,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = patterns(
     '',
     url(r'^$', 'stacktach.views.welcome', name='welcome'),
-
     url(r'stacky/deployments/$', 'stacktach.stacky_server.do_deployments'),
     url(r'stacky/events/$', 'stacktach.stacky_server.do_events'),
     url(r'stacky/hosts/$', 'stacktach.stacky_server.do_hosts'),

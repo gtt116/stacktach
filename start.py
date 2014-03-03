@@ -5,15 +5,12 @@ from eventlet import wsgi
 
 import yaml
 from stacktach import app
-from stacktach.worker import worker
+from stacktach.worker import manager
 
 # TODO: First start create database
 
 if __name__ == '__main__':
     deployments = yaml.load(file('etc/deployments.yaml').read())
-    for d in deployments['deployments']:
-        eventlet.spawn_n(
-            worker.run, d
-        )
+    manager.start_consume(deployments['deployments'])
 
     wsgi.server(eventlet.listen(('0.0.0.0', 8000)), app.application)

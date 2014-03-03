@@ -30,7 +30,7 @@ import eventlet
 
 from pympler.process import ProcessMemoryInfo
 
-from stacktach import models, views
+from stacktach import dbapi
 
 
 logging.basicConfig(format='[%(asctime)s] ' + logging.BASIC_FORMAT)
@@ -85,7 +85,7 @@ class NovaConsumer(object):
         args = (routing_key, json.loads(body))
         asJson = json.dumps(args)
 
-        raw = views.process_raw_data(self.deployment, args, asJson)
+        raw = dbapi.process_raw_data(self.deployment, args, asJson)
         if raw:
             self.processed += 1
 
@@ -167,40 +167,3 @@ class ElasticSearchFeeder(NovaConsumer):
 
         if str(res.status) != '201':
             raise Exception('%s: %s' % (res.status, res.read()))
-
-
-def run(deployment_config):
-    name = deployment_config['name']
-    host = deployment_config.get('rabbit_host', 'localhost')
-    port = deployment_config.get('rabbit_port', 5672)
-    user_id = deployment_config.get('rabbit_userid', 'guest')
-    password = deployment_config.get('rabbit_password', '')
-    virtual_host = deployment_config.get('rabbit_virtual_host', '/')
-    durable = deployment_config.get('durable_queue', False)
-
-    deployment, new = models.get_or_create_deployment(name)
-
-    LOG.info("Starting worker for '%s'" % name)
-    LOG.info("name: %s: host:%s port:%s user_id:%s virtual_host:%s" %
-             (name, host, port, user_id, virtual_host))
-
-    params = dict(hostname=host,
-                  port=port,
-                  virtual_host=virtual_host)
-
-    if user_id:
-        params['userid'] = user_id
-    if password:
-        params['password'] = password
-
-    while True:
-        LOG.debug("Processing on '%s'" % name)
-        with kombu.connection.BrokerConnection(**params) as conn:
-            try:
-                consumer = NovaConsumer(name, conn, deployment, durable)
-                consumer.run()
-            except Exception as e:
-                LOG.exception("name=%s, exception=%s. Reconnecting in 5s" %
-                                (name, e))
-                eventlet.sleep(5)
-        LOG.debug("Completed processing on '%s'" % name)
