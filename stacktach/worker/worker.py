@@ -180,7 +180,7 @@ def run(deployment_config):
 
     deployment, new = models.get_or_create_deployment(name)
 
-    print "Starting worker for '%s'" % name
+    LOG.info("Starting worker for '%s'" % name)
     LOG.info("name: %s: host:%s port:%s user_id:%s virtual_host:%s" %
              (name, host, port, user_id, virtual_host))
 
