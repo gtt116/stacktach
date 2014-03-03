@@ -30,8 +30,6 @@ class Mailer(object):
 
     def send_mail(self, to_list, sub, content):
         LOG.debug("Send email to %s" % to_list)
-        if not self.client:
-            self.connect()
 
         assert to_list
         me = "%s<%s@%s>" % (self.mail_user, self.mail_user, self.mail_postfix)
@@ -41,7 +39,9 @@ class Mailer(object):
         msg['From'] = me
         msg['To'] = ";".join(to_list)
 
+        self.connect()
         self.client.sendmail(me, to_list, msg.as_string())
+        self.close()
 
     def close(self):
         self.client.close()
