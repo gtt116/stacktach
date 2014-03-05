@@ -20,25 +20,17 @@ import datetime
 import json
 import logging
 
+import eventlet
 import iso8601
 import kombu
 import kombu.connection
 import kombu.entity
 from kombu import Consumer
-
-import eventlet
-
 from pympler.process import ProcessMemoryInfo
 
 from stacktach import dbapi
 
-
-logging.basicConfig(format='[%(asctime)s] ' + logging.BASIC_FORMAT)
 LOG = logging.getLogger(__name__)
-LOG.setLevel(logging.DEBUG)
-handler = logging.handlers.TimedRotatingFileHandler('worker.log',
-                                           when='h', interval=6, backupCount=4)
-LOG.addHandler(handler)
 
 
 class NovaConsumer(object):
