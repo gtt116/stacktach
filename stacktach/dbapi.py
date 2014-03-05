@@ -39,8 +39,12 @@ def _monitor_message(routing_key, body):
     # instance UUID's seem to hide in a lot of odd places.
     instance = payload.get('instance_id', None)
     instance = payload.get('instance_uuid', instance)
-    if not instance:
-        instance = payload.get('exception', {}).get('kwargs', {}).get('uuid')
+    try:
+        if not instance:
+            instance = payload.get('exception', {}).get('kwargs', {}).get('uuid')
+    except AttributeError:
+        #FIXME: LOG.warn here
+        instance = None
     if not instance:
         instance = payload.get('instance', {}).get('uuid')
 
